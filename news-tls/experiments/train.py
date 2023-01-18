@@ -92,6 +92,7 @@ def train(args, dataset, env, trunc_timelines=False, time_span_extension=0):
     evaluator = rouge.TimelineRougeEvaluator(measures=["rouge_1", "rouge_2"])
     n_topics = len(dataset.collections)
     result_path = Path(args.output)
+    dataset_name = dataset_path.name
     for i, collection in enumerate(dataset.collections):
 
         ref_timelines = [TilseTimeline(tl.date_to_summaries) for tl in collection.timelines]
