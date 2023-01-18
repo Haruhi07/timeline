@@ -171,7 +171,8 @@ def main(args):
         date_ranker = datewise.MentionCountDateRanker()
         sent_collector = datewise.PM_Mean_SentenceCollector(
             clip_sents=5, pub_end=2)
-        summarizer = summarizers.CentroidOpt()
+        #summarizer = summarizers.CentroidOpt()
+        summarizer = summarizers.PegasusSummariser()
         system = datewise.DatewiseTimelineGenerator(
             date_ranker=date_ranker,
             summarizer=summarizer,
