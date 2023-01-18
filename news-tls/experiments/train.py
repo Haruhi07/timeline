@@ -86,13 +86,12 @@ def extract_keywords(ref_timeline, metric='tfidf'):
     return set(keywords)
 
 
-def train(args, dataset, env, trunc_timelines=False, time_span_extension=0):
+def train(args, dataset, env, trunc_timelines=False, time_span_extension=0, dataset_name=None):
     average_rewards = []
     metric = 'align_date_content_costs_many_to_one'
     evaluator = rouge.TimelineRougeEvaluator(measures=["rouge_1", "rouge_2"])
     n_topics = len(dataset.collections)
     result_path = Path(args.output)
-    dataset_name = dataset_path.name
     for i, collection in enumerate(dataset.collections):
 
         ref_timelines = [TilseTimeline(tl.date_to_summaries) for tl in collection.timelines]
@@ -265,7 +264,8 @@ def main(args):
               dataset=dataset,
               env=env,
               trunc_timelines=True,
-              time_span_extension=7)
+              time_span_extension=7,
+              dataset_name=dataset_name)
     else:
         train(args=args,
               dataset=dataset,
