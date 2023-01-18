@@ -135,7 +135,12 @@ def train(args, dataset, env, trunc_timelines=False, time_span_extension=0):
                 key_to_model = None
                 date_ranker = datewise.MentionCountDateRanker()
                 sent_collector = datewise.PM_Mean_SentenceCollector(clip_sents=5, pub_end=2)
-                summarizer = summarizers.PegasusSummariser(actor)
+                summarizer = summarizers.PegasusSummariser(model=actor,
+                                                           critic=critic,
+                                                           tokenizer=tokenizer,
+                                                           critic_loss_fct=critic_loss_fct,
+                                                           optimizerA=optimizerA,
+                                                           optimizerC=optimizerC)
                 system = datewise.DatewiseTimelineGenerator(
                     date_ranker=date_ranker,
                     summarizer=summarizer,
