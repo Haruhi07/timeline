@@ -1,9 +1,11 @@
 import json
+import torch
 import argparse
 from pathlib import Path
 from tilse.data.timelines import Timeline as TilseTimeline
 from tilse.data.timelines import GroundTruth as TilseGroundTruth
 from tilse.evaluation import rouge
+from transformers import PegasusTokenizer, PegasusForConditionalGeneration, GPT2Tokenizer, GPT2LMHeadModel
 from news_tls import utils, data, datewise, clust, summarizers
 from pprint import pprint
 
@@ -159,6 +161,14 @@ def main(args):
     dataset = data.Dataset(dataset_path)
     dataset_name = dataset_path.name
 
+    tokenizer = PegasusTokenizer.from_pretrained(args.model)
+    state_size = tokenizer.vocab_size
+    actor = PegasusForConditionalGeneration.from_pretrained(args.model).to(args.device)
+    critic = None
+    critic_loss_fct = torch.nn.MSELoss()
+    optimizerA = torch.optim.Adam(actor.lm_head.parameters(), lr=args.lr)
+    optimizerC = torch.optim.Adam(critic.parameters(), lr=args.lr)
+
     if args.method == 'datewise':
         resources = Path(args.resources)
         models_path = resources / 'supervised_date_ranker.{}.pkl'.format(
@@ -172,7 +182,12 @@ def main(args):
         sent_collector = datewise.PM_Mean_SentenceCollector(
             clip_sents=5, pub_end=2)
         #summarizer = summarizers.CentroidOpt()
-        summarizer = summarizers.PegasusSummariser()
+        summarizer = summarizers.PegasusSummariser(model=actor,
+                                                   critic=critic,
+                                                   tokenizer=tokenizer,
+                                                   critic_loss_fct=critic_loss_fct,
+                                                   optimizerA=optimizerA,
+                                                   optimizerC=optimizerC)
         system = datewise.DatewiseTimelineGenerator(
             date_ranker=date_ranker,
             summarizer=summarizer,
