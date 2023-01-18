@@ -105,6 +105,10 @@ class DatewiseRLGenerator(DatewiseTimelineGenerator):
            output_titles=False,
            output_body_sents=True):
 
+        print('vectorizer...')
+        vectorizer = TfidfVectorizer(stop_words='english', lowercase=True)
+        vectorizer.fit([s.raw for a in collection.articles() for s in a.sentences])
+
         print('date ranking...')
         ranked_dates = self.date_ranker.rank_dates(collection)
 
