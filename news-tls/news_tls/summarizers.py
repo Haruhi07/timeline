@@ -23,8 +23,8 @@ class Summarizer:
         raise NotImplementedError
 
 class PegasusSummariser(Summarizer):
-    def __init__(self, tokenizer, model, critic, critic_loss_fct, optimizerA, optimizerC):
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+    def __init__(self, tokenizer, model, critic, critic_loss_fct, optimizerA, optimizerC, device='cuda'):
+        self.device = device
         self.name = 'PEGASUS Summariser'
         self.episodes = 2
         self.max_new_tokens = 30

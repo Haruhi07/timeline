@@ -140,7 +140,8 @@ def train(args, dataset, env, trunc_timelines=False, time_span_extension=0, data
                                                            tokenizer=tokenizer,
                                                            critic_loss_fct=critic_loss_fct,
                                                            optimizerA=optimizerA,
-                                                           optimizerC=optimizerC)
+                                                           optimizerC=optimizerC,
+                                                           device=args.device)
                 system = datewise.DatewiseRLGenerator(
                     date_ranker=date_ranker,
                     summarizer=summarizer,
@@ -244,7 +245,7 @@ def main(args):
     result_path = Path(args.output)
     if args.preference:
         prefdata_path = Path(args.preference)
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = args.device
     valid_on = True
     valid_set = ['libya']
 
