@@ -141,7 +141,7 @@ def train(args, dataset, env, trunc_timelines=False, time_span_extension=0, data
                                                            critic_loss_fct=critic_loss_fct,
                                                            optimizerA=optimizerA,
                                                            optimizerC=optimizerC)
-                system = datewise.DatewiseTimelineGenerator(
+                system = datewise.DatewiseRLGenerator(
                     date_ranker=date_ranker,
                     summarizer=summarizer,
                     sent_collector=sent_collector,

@@ -93,6 +93,69 @@ class DatewiseTimelineGenerator():
         if self.key_to_model:
             self.date_ranker.model = self.key_to_model[key]
 
+class DatewiseRLGenerator(DatewiseTimelineGenerator):
+    def rl(self,
+           args,
+           collection,
+           env,
+           max_dates=10,
+           max_summary_sents=1,
+           ref_tl=None,
+           input_titles=False,
+           output_titles=False,
+           output_body_sents=True):
+
+        print('date ranking...')
+        ranked_dates = self.date_ranker.rank_dates(collection)
+
+        start = collection.start.date()
+        end = collection.end.date()
+        ranked_dates = [d for d in ranked_dates if start <= d <= end]
+
+        print('candidates & summarization...')
+        dates_with_sents = self.sent_collector.collect_sents(
+            ranked_dates,
+            collection,
+            vectorizer,
+            include_titles=input_titles,
+        )
+
+        def sent_filter(sent):
+            """
+            Returns True if sentence is allowed to be in a summary.
+            """
+            lower = sent.raw.lower()
+            if not any([kw in lower for kw in collection.keywords]):
+                return False
+            elif not output_titles and sent.is_title:
+                return False
+            elif not output_body_sents and not sent.is_sent:
+                return False
+            else:
+                return True
+
+        print('reinforcement learning...')
+
+        timeline = []
+        l = 0
+        total_reward = []
+        for i, (d, d_sents) in enumerate(dates_with_sents):
+            if l >= max_dates:
+                break
+
+            summary, reward = self.summarizer.rl(args, d_sents, env, k=max_summary_sents)
+            total_reward.append(reward)
+            if summary:
+                time = datetime.datetime(d.year, d.month, d.day)
+                timeline.append((time, summary))
+                l += 1
+
+        print('epoch reward')
+        epoch_reward = np.mean(total_reward, axis=0)
+        for i, re in enumerate(epoch_reward):
+            print('R{}: {:.4}'.format(i, re))
+        return epoch_reward
+
 
 ################################ DATE RANKING ##################################
 
