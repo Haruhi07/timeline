@@ -219,9 +219,17 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--dataset', required=True)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--dataset', required=True, help='dataset dir')
+    parser.add_argument('--output', required=True, help='result dir')
     parser.add_argument('--method', required=True)
+    parser.add_argument('--device', default='cuda')
+    parser.add_argument('--alpha', required=False, default=15.0)
+    parser.add_argument('--lr', required=False, default=1e-3)
+    parser.add_argument('--epochs', required=False, default=15, type=int)
+    parser.add_argument('--gamma', required=False, default=0.99)
+    parser.add_argument('--model', required=False, default='google/pegasus-multi_news', help='model dir/name')
+    parser.add_argument('--preference', required=False, default=None, help='preference data dir')
     parser.add_argument('--resources', default=None,
-        help='model resources for tested method')
-    parser.add_argument('--output', default=None)
+                        help='model resources for tested method')
     main(parser.parse_args())
