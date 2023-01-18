@@ -167,7 +167,7 @@ def main(args):
     critic = None
     critic_loss_fct = torch.nn.MSELoss()
     optimizerA = torch.optim.Adam(actor.lm_head.parameters(), lr=args.lr)
-    optimizerC = torch.optim.Adam(critic.parameters(), lr=args.lr)
+    optimizerC = None
 
     if args.method == 'datewise':
         resources = Path(args.resources)
