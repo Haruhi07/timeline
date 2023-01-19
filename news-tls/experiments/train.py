@@ -155,7 +155,8 @@ def train(args, dataset, env, trunc_timelines=False, time_span_extension=0, data
                                                            tokenizer=tokenizer,
                                                            critic_loss_fct=critic_loss_fct,
                                                            optimizerA=optimizerA,
-                                                           optimizerC=optimizerC)
+                                                           optimizerC=optimizerC,
+                                                           device=args.device)
                 system = clust.ClusteringRLGenerator(
                     cluster_ranker=cluster_ranker,
                     clusterer=clusterer,
