@@ -154,8 +154,8 @@ class Environment:
                 return state, ret_batch, None
 
             R1 = self.weights[0] * self.factual_consistency(source_embedding=source_embedding, summary_embedding=summary_embedding)
-            R2 = 0
-            #R2 = self.weights[1] * self.topical_coherence(summary_embedding=summary_embedding)
+            #R2 = 0
+            R2 = self.weights[1] * self.topical_coherence(summary_embedding=summary_embedding)
             # R2 = self.count_keywords(summary)
             R3 = self.weights[2] * self.language_quality(source, summary)
             R4 = self.weights[3] * self.repetition_punishment(summary=summary)
