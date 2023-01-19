@@ -100,6 +100,8 @@ class PegasusSummariser(Summarizer):
                                          decoder_input_ids=decoder_input_ids,
                                          return_dict=True)['logits']
                 probs = F.softmax(logits[:, -1], dim=-1)
+                if torch.isnan(probs[0][0]):
+                    break
                 m = Categorical(probs)
                 action = m.sample()
                 #print('action: ', action)
