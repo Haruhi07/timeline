@@ -85,6 +85,7 @@ class PegasusSummariser(Summarizer):
 
         for i_episode in range(self.episodes):
             #reset environment and episode reward
+            summary = None
             ep_rewards = np.zeros(5)
             rewards = []
             saved_actions = []
