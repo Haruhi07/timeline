@@ -151,6 +151,8 @@ class PegasusSummariser(Summarizer):
             self.optimizerA.zero_grad()
             self.optimizerC.zero_grad()
 
+            if len(actor_losses) == 0:
+                continue
             lossA = torch.stack(actor_losses).sum()
             lossC = torch.stack(value_losses).sum()
 
