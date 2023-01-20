@@ -103,7 +103,7 @@ def train(args, dataset, env, trunc_timelines=False, time_span_extension=0, data
 
         for j, ref_timeline in enumerate(ref_timelines):
             print(f'topic {i+1}/{n_topics}: {topic}, ref timeline {j+1}/{n_ref}')
-            if (i+1) < 3:
+            if (i+1 < 2) or (i+1 == 2 and j+1 < 3):
                 continue
 
             keywords = extract_keywords(ref_timeline.dates_to_summaries)
